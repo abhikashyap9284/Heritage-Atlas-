@@ -1,0 +1,4 @@
+"use client";
+import {useEffect} from "react";
+export function track(eventType:'page_view'|'ar_open'|'qr_scan'|'audio_play'|'session_end',routeId?:string,landmarkId?:string,durationSeconds=0){if(typeof window==='undefined')return;let sessionId=sessionStorage.getItem('heritage_session_id');if(!sessionId){sessionId=crypto.randomUUID();sessionStorage.setItem('heritage_session_id',sessionId)}fetch('/api/track',{method:'POST',headers:{'Content-Type':'application/json'},body:JSON.stringify({sessionId,eventType,routeId,landmarkId,durationSeconds}),keepalive:true}).catch(()=>{})}
+export default function TrackView({routeId,landmarkId}:{routeId?:string;landmarkId?:string}){useEffect(()=>{const start=Date.now();track('page_view',routeId,landmarkId);return()=>{track('session_end',routeId,landmarkId,Math.min(86400,Math.floor((Date.now()-start)/1000))) }},[routeId,landmarkId]);return null}

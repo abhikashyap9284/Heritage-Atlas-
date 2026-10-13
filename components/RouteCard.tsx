@@ -1,0 +1,5 @@
+import Image from "next/image";
+import Link from "next/link";
+import {ArrowUpRight,MapPin,Landmark as LandmarkIcon} from "lucide-react";
+import type {HeritageRoute} from "@/lib/types";
+export default function RouteCard({route,index=0}:{route:HeritageRoute;index?:number}){return <Link href={`/routes/${route.slug}`} className={`route-card route-card-${route.theme}`}><div className="route-card-art"><Image src={route.image} alt={`Illustrated architectural scene for ${route.city}`} fill sizes="(max-width: 780px) 100vw, 50vw" style={{objectFit:'cover'}}/><div className="route-card-overlay"/><div className="route-index">0{index+1} / DESTINATION</div><div className="round-arrow"><ArrowUpRight size={22}/></div></div><div className="route-card-info"><span className="eyebrow"><MapPin size={14}/>{route.city}, India</span><h3>{route.name}</h3><p>{route.tagline}</p><div className="route-card-bottom"><span><LandmarkIcon size={15}/> {route.landmarks.length} landmarks</span><span>Explore this route <ArrowUpRight size={16}/></span></div></div></Link>}

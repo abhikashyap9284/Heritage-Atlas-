@@ -1,0 +1,4 @@
+"use client";
+import {useState} from 'react';
+import {Star} from 'lucide-react';
+export default function ReviewStars({routeId}:{routeId:string}){const [value,setValue]=useState(0),[message,setMessage]=useState('');const submit=async(v:number)=>{setValue(v);const r=await fetch('/api/reviews',{method:'POST',headers:{'Content-Type':'application/json'},body:JSON.stringify({routeId,rating:v})});setMessage(r.ok?'Thank you! Your rating was saved.':r.status===401?'Sign in to rate this route.':'Could not save rating.')};return <div className="review-stars"><span className="eyebrow">RATE THIS TRAIL</span><div className="stars">{[1,2,3,4,5].map(i=><button key={i} onClick={()=>submit(i)} aria-label={`Rate ${i} stars`}><Star size={25} fill={i<=value?'#b98352':'none'} color="#b98352"/></button>)}</div>{message&&<small>{message}</small>}</div>}

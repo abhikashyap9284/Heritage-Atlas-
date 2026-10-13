@@ -1,0 +1,7 @@
+import {NextResponse} from "next/server";
+import {db,hasDatabase} from "@/lib/db";
+import {requireUser,error} from "@/lib/auth";
+import {isSameOrigin} from "@/lib/validation";
+export async function GET(){const user=await requireUser();if(!user)return error('Sign in required',401);if(!hasDatabase())return error('Database unavailable',503);const sql=db();const rows=await sql`SELECT landmark_id FROM favorites WHERE user_id=${user.id}`;return NextResponse.json({ids:rows.map(r=>r.landmark_id)})}
+export async function POST(req:Request){if(!isSameOrigin(req))return error('Forbidden origin',403);const user=await requireUser();if(!user)return error('Sign in required',401);const {landmarkId}=await req.json();if(typeof landmarkId!=='string'||landmarkId.length>100)return error('Invalid landmark');try{const sql=db();await sql`INSERT INTO favorites(user_id,landmark_id) VALUES(${user.id},${landmarkId}) ON CONFLICT DO NOTHING`;return NextResponse.json({ok:true})}catch{return error('Unable to save favorite',400)}}
+export async function DELETE(req:Request){if(!isSameOrigin(req))return error('Forbidden origin',403);const user=await requireUser();if(!user)return error('Sign in required',401);const {landmarkId}=await req.json();if(typeof landmarkId!=='string')return error('Invalid landmark');const sql=db();await sql`DELETE FROM favorites WHERE user_id=${user.id} AND landmark_id=${landmarkId}`;return NextResponse.json({ok:true})}

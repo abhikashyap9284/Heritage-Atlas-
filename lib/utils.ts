@@ -1,0 +1,3 @@
+export function slugify(value:string){return value.toLowerCase().normalize("NFKD").replace(/[\u0300-\u036f]/g,"").replace(/[^a-z0-9]+/g,"-").replace(/(^-|-$)/g,"")}
+export function distanceMeters(aLat:number,aLng:number,bLat:number,bLng:number){const R=6371000;const rad=(n:number)=>n*Math.PI/180;const dl=rad(bLat-aLat);const dg=rad(bLng-aLng);const v=Math.sin(dl/2)**2+Math.cos(rad(aLat))*Math.cos(rad(bLat))*Math.sin(dg/2)**2;return 2*R*Math.asin(Math.min(1,Math.sqrt(v)))}
+export function humanDistance(meters:number){return meters<1000?`${Math.round(meters)} m`:`${(meters/1000).toFixed(1)} km`}
